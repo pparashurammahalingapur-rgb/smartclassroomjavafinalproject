@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Courses - Smart Classroom Scheduler</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background: #fce7f3; min-height: 100vh; color: #831843; }
+        
+        /* Navigation */
+        .navbar { background: #ffffff; border-bottom: 2px solid #f9a8d4; padding: 0; position: fixed; top: 0; left: 0; right: 0; z-index: 1000; }
+        .navbar-inner { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; height: 60px; }
+        .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .logo-icon { width: 40px; height: 40px; background: #ec4899; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; }
+        .logo-text { color: #831843; font-weight: 700; font-size: 20px; }
+        .nav-links { display: flex; gap: 5px; }
+        .nav-link { color: #831843; text-decoration: none; padding: 10px 15px; border-radius: 8px; font-size: 14px; font-weight: 500; transition: all 0.3s; }
+        .nav-link:hover, .nav-link.active { background: #fdf2f8; color: #ec4899; }
+        .nav-actions { display: flex; gap: 10px; }
+        .nav-btn { padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: 600; }
+        .btn-primary { background: #ec4899; color: white; border: none; cursor: pointer; }
+        .btn-secondary { background: #fdf2f8; color: #ec4899; border: 1px solid #ec4899; }
+        
+        /* Main Content */
+        .container { max-width: 1400px; margin: 0 auto; padding: 80px 20px 30px; }
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .page-header h1 { font-size: 32px; color: #831843; }
+        .page-header p { color: #be185d; }
+        
+        /* Related Links Bar */
+        .related-bar { background: #ffffff; border-radius: 12px; border: 1px solid #f9a8d4; padding: 15px 20px; margin-bottom: 25px; display: flex; align-items: center; gap: 15px; }
+        .related-bar span { font-weight: 600; color: #831843; }
+        .related-link { background: #fdf2f8; color: #ec4899; padding: 8px 15px; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: 500; border: 1px solid #f9a8d4; }
+        .related-link:hover { background: #ec4899; color: white; }
+        
+        /* Add Course Button */
+        .add-btn { background: #ec4899; color: white; padding: 12px 25px; border-radius: 10px; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; border: none; cursor: pointer; }
+        .add-btn:hover { background: #be185d; }
+        
+        /* Courses Grid */
+        .courses-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .course-card { background: #ffffff; border-radius: 16px; border: 1px solid #f9a8d4; padding: 25px; transition: all 0.3s; }
+        .course-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(236, 72, 153, 0.15); }
+        .course-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px; }
+        .course-code { background: #ec4899; color: white; padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; }
+        .course-credits { color: #be185d; font-size: 13px; font-weight: 600; }
+        .course-name { font-size: 18px; font-weight: 700; color: #831843; margin-bottom: 8px; }
+        .course-dept { display: inline-block; background: #fdf2f8; color: #ec4899; padding: 4px 10px; border-radius: 5px; font-size: 12px; margin-bottom: 12px; }
+        .course-info { display: flex; flex-direction: column; gap: 8px; margin-top: 15px; padding-top: 15px; border-top: 1px solid #f9a8d4; }
+        .info-row { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #be185d; }
+        .info-row i { color: #ec4899; width: 16px; }
+        .course-actions { display: flex; gap: 10px; margin-top: 15px; }
+        .course-btn { flex: 1; padding: 10px; border-radius: 8px; text-align: center; font-size: 13px; font-weight: 600; text-decoration: none; }
+        .course-btn.primary { background: #ec4899; color: white; }
+        .course-btn.secondary { background: #fdf2f8; color: #ec4899; border: 1px solid #f9a8d4; }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-inner">
+            <a href="home.html" class="logo">
+                <div class="logo-icon"><i class="fas fa-graduation-cap"></i></div>
+                <span class="logo-text">EduSmart</span>
+            </a>
+            <div class="nav-links">
+                <a href="home.html" class="nav-link"><i class="fas fa-home"></i> Home</a>
+                <a href="index.html" class="nav-link"><i class="fas fa-chart-line"></i> Dashboard</a>
+                <a href="timetable-view.html" class="nav-link"><i class="fas fa-calendar-alt"></i> Timetable</a>
+                <a href="courses-view.html" class="nav-link active"><i class="fas fa-book"></i> Courses</a>
+                <a href="classrooms-view.html" class="nav-link"><i class="fas fa-door-open"></i> Classrooms</a>
+                <a href="teachers-view.html" class="nav-link"><i class="fas fa-chalkboard-teacher"></i> Teachers</a>
+                <a href="optimizer-dashboard.html" class="nav-link"><i class="fas fa-magic"></i> Optimizer</a>
+            </div>
+            <div class="nav-actions">
+                <a href="register.html" class="nav-btn btn-secondary"><i class="fas fa-user-plus"></i> Register</a>
+                <button onclick="logout()" class="nav-btn btn-primary"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <div>
+                <h1><i class="fas fa-book"></i> All Courses</h1>
+                <p>Manage courses and their schedules</p>
+            </div>
+            <a href="index.html#courses" class="add-btn"><i class="fas fa-plus"></i> Add New Course</a>
+        </div>
+
+        <!-- Related Pages Bar -->
+        <div class="related-bar">
+            <span><i class="fas fa-link"></i> Related:</span>
+            <a href="timetable-view.html" class="related-link"><i class="fas fa-calendar-alt"></i> View Timetable</a>
+            <a href="optimizer-dashboard.html" class="related-link"><i class="fas fa-magic"></i> Schedule Courses</a>
+            <a href="teachers-view.html" class="related-link"><i class="fas fa-chalkboard-teacher"></i> Assign Teachers</a>
+        </div>
+
+        <!-- Courses Grid -->
+        <div class="courses-grid">
+            <!-- Course 1 -->
+            <div class="course-card">
+                <div class="course-header">
+                    <span class="course-code">CS101</span>
+                    <span class="course-credits"><i class="fas fa-star"></i> 3 Credits</span>
+                </div>
+                <h3 class="course-name">Introduction to Programming</h3>
+                <span class="course-dept"><i class="fas fa-building"></i> Computer Science</span>
+                <div class="course-info">
+                    <div class="info-row"><i class="fas fa-clock"></i> 3 hours/week</div>
+                    <div class="info-row"><i class="fas fa-user"></i> Dr. John Smith</div>
+                    <div class="info-row"><i class="fas fa-door-open"></i> Room A-101</div>
+                    <div class="info-row"><i class="fas fa-calendar"></i> Mon, Wed, Fri</div>
+                </div>
+                <div class="course-actions">
+                    <a href="timetable-view.html" class="course-btn primary"><i class="fas fa-calendar"></i> View Schedule</a>
+                    <a href="index.html#courses" class="course-btn secondary"><i class="fas fa-edit"></i> Edit</a>
+                </div>
+            </div>
+
+            <!-- Course 2 -->
+            <div class="course-card">
+                <div class="course-header">
+                    <span class="course-code">CS201</span>
+                    <span class="course-credits"><i class="fas fa-star"></i> 4 Credits</span>
+                </div>
+                <h3 class="course-name">Data Structures</h3>
+                <span class="course-dept"><i class="fas fa-building"></i> Computer Science</span>
+                <div class="course-info">
+                    <div class="info-row"><i class="fas fa-clock"></i> 4 hours/week</div>
+                    <div class="info-row"><i class="fas fa-user"></i> Prof. Sarah Johnson</div>
+                    <div class="info-row"><i class="fas fa-door-open"></i> Room B-202</div>
+                    <div class="info-row"><i class="fas fa-calendar"></i> Tue, Thu</div>
+                </div>
+                <div class="course-actions">
+                    <a href="timetable-view.html" class="course-btn primary"><i class="fas fa-calendar"></i> View Schedule</a>
+                    <a href="index.html#courses" class="course-btn secondary"><i class="fas fa-edit"></i> Edit</a>
+                </div>
+            </div>
+
+            <!-- Course 3 -->
+            <div class="course-card">
+                <div class="course-header">
+                    <span class="course-code">CS301</span>
+                    <span class="course-credits"><i class="fas fa-star"></i> 3 Credits</span>
+                </div>
+                <h3 class="course-name">Database Systems</h3>
+                <span class="course-dept"><i class="fas fa-building"></i> Computer Science</span>
+                <div class="course-info">
+                    <div class="info-row"><i class="fas fa-clock"></i> 3 hours/week</div>
+                    <div class="info-row"><i class="fas fa-user"></i> Dr. John Smith</div>
+                    <div class="info-row"><i class="fas fa-door-open"></i> Lab-1</div>
+                    <div class="info-row"><i class="fas fa-calendar"></i> Mon, Wed</div>
+                </div>
+                <div class="course-actions">
+                    <a href="timetable-view.html" class="course-btn primary"><i class="fas fa-calendar"></i> View Schedule</a>
+                    <a href="index.html#courses" class="course-btn secondary"><i class="fas fa-edit"></i> Edit</a>
+                </div>
+            </div>
+
+            <!-- Course 4 -->
+            <div class="course-card">
+                <div class="course-header">
+                    <span class="course-code">MATH101</span>
+                    <span class="course-credits"><i class="fas fa-star"></i> 4 Credits</span>
+                </div>
+                <h3 class="course-name">Calculus I</h3>
+                <span class="course-dept"><i class="fas fa-building"></i> Mathematics</span>
+                <div class="course-info">
+                    <div class="info-row"><i class="fas fa-clock"></i> 4 hours/week</div>
+                    <div class="info-row"><i class="fas fa-user"></i> Prof. Michael Brown</div>
+                    <div class="info-row"><i class="fas fa-door-open"></i> Room A-102</div>
+                    <div class="info-row"><i class="fas fa-calendar"></i> Mon, Wed, Fri</div>
+                </div>
+                <div class="course-actions">
+                    <a href="timetable-view.html" class="course-btn primary"><i class="fas fa-calendar"></i> View Schedule</a>
+                    <a href="index.html#courses" class="course-btn secondary"><i class="fas fa-edit"></i> Edit</a>
+                </div>
+            </div>
+
+            <!-- Course 5 -->
+            <div class="course-card">
+                <div class="course-header">
+                    <span class="course-code">MATH201</span>
+                    <span class="course-credits"><i class="fas fa-star"></i> 3 Credits</span>
+                </div>
+                <h3 class="course-name">Linear Algebra</h3>
+                <span class="course-dept"><i class="fas fa-building"></i> Mathematics</span>
+                <div class="course-info">
+                    <div class="info-row"><i class="fas fa-clock"></i> 3 hours/week</div>
+                    <div class="info-row"><i class="fas fa-user"></i> Prof. Michael Brown</div>
+                    <div class="info-row"><i class="fas fa-door-open"></i> Room C-301</div>
+                    <div class="info-row"><i class="fas fa-calendar"></i> Tue, Thu</div>
+                </div>
+                <div class="course-actions">
+                    <a href="timetable-view.html" class="course-btn primary"><i class="fas fa-calendar"></i> View Schedule</a>
+                    <a href="index.html#courses" class="course-btn secondary"><i class="fas fa-edit"></i> Edit</a>
+                </div>
+            </div>
+
+            <!-- Course 6 -->
+            <div class="course-card">
+                <div class="course-header">
+                    <span class="course-code">PHY101</span>
+                    <span class="course-credits"><i class="fas fa-star"></i> 4 Credits</span>
+                </div>
+                <h3 class="course-name">Physics I</h3>
+                <span class="course-dept"><i class="fas fa-building"></i> Physics</span>
+                <div class="course-info">
+                    <div class="info-row"><i class="fas fa-clock"></i> 4 hours/week</div>
+                    <div class="info-row"><i class="fas fa-user"></i> Dr. Emily Davis</div>
+                    <div class="info-row"><i class="fas fa-door-open"></i> Room B-201</div>
+                    <div class="info-row"><i class="fas fa-calendar"></i> Mon, Wed, Fri</div>
+                </div>
+                <div class="course-actions">
+                    <a href="timetable-view.html" class="course-btn primary"><i class="fas fa-calendar"></i> View Schedule</a>
+                    <a href="index.html#courses" class="course-btn secondary"><i class="fas fa-edit"></i> Edit</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function logout() {
+            localStorage.removeItem('currentUser');
+            sessionStorage.removeItem('currentUser');
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Smart Classroom & Timetable Scheduler</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: #fce7f3;
+        }
+
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .login-box {
+            background: #ffffff;
+            border-radius: 24px;
+            border: 1px solid #f9a8d4;
+            padding: 48px;
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .login-logo {
+            width: 80px;
+            height: 80px;
+            background: #ec4899;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            font-size: 36px;
+            color: white;
+        }
+
+        .login-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #831843;
+        }
+
+        .login-header p {
+            color: #be185d;
+            font-size: 15px;
+        }
+
+        .login-form .form-group {
+            margin-bottom: 24px;
+        }
+
+        .login-form label {
+            display: block;
+            margin-bottom: 10px;
+            color: #831843;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #ec4899;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .login-form input {
+            width: 100%;
+            padding: 16px 16px 16px 50px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: #831843;
+            font-size: 15px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .login-form input:focus {
+            outline: none;
+            border-color: #ec4899;
+            background: #ffffff;
+        }
+
+        .login-form input:focus + i,
+        .input-wrapper:focus-within i {
+            color: #ec4899;
+        }
+
+        .login-form input::placeholder {
+            color: #f472b6;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #ec4899;
+            cursor: pointer;
+            font-size: 18px;
+            padding: 0;
+            transition: all 0.3s ease;
+        }
+
+        .password-toggle:hover {
+            color: #be185d;
+        }
+
+        .login-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+            font-size: 14px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            color: #831843;
+        }
+
+        .remember-me input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #ec4899;
+            cursor: pointer;
+        }
+
+        .forgot-password {
+            color: #ec4899;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .forgot-password:hover {
+            color: #be185d;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 16px;
+            background: #ec4899;
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-login:hover {
+            background: #be185d;
+        }
+
+        .btn-login:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-login.loading {
+            pointer-events: none;
+        }
+
+        .btn-login.loading i {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .login-footer {
+            text-align: center;
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid #f9a8d4;
+        }
+
+        .login-footer p {
+            color: #be185d;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        .demo-accounts {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .demo-account {
+            padding: 12px;
+            background: #fdf2f8;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #831843;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid #f9a8d4;
+        }
+
+        .demo-account:hover {
+            background: #fce7f3;
+            border-color: #ec4899;
+        }
+
+        .demo-account strong {
+            color: #ec4899;
+        }
+
+        .error-message {
+            background: #fee2e2;
+            border: 1px solid #fecaca;
+            color: #dc2626;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .error-message.show {
+            display: flex;
+        }
+
+        .success-message {
+            background: #d1fae5;
+            border: 1px solid #a7f3d0;
+            color: #059669;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .success-message.show {
+            display: flex;
+        }
+
+        @media (max-width: 480px) {
+            .login-box {
+                padding: 32px 24px;
+            }
+
+            .login-header h1 {
+                font-size: 24px;
+            }
+
+            .login-options {
+                flex-direction: column;
+                gap: 16px;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-bg">
+        <div class="gradient-sphere sphere-1"></div>
+        <div class="gradient-sphere sphere-2"></div>
+        <div class="gradient-sphere sphere-3"></div>
+    </div>
+
+    <div class="login-container">
+        <div class="login-box">
+            <div class="login-header">
+                <div class="login-logo">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <h1>Welcome Back</h1>
+                <p>Sign in to access your dashboard</p>
+            </div>
+
+            <div class="error-message" id="errorMessage">
+                <i class="fas fa-exclamation-circle"></i>
+                <span id="errorText">Invalid credentials</span>
+            </div>
+
+            <div class="success-message" id="successMessage">
+                <i class="fas fa-check-circle"></i>
+                <span id="successText">Login successful!</span>
+            </div>
+
+            <form class="login-form" id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="email" placeholder="Enter your email" required autocomplete="email">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="password" placeholder="Enter your password" required autocomplete="current-password">
+                        <button type="button" class="password-toggle" id="togglePassword">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="login-options">
+                    <label class="remember-me">
+                        <input type="checkbox" id="rememberMe">
+                        <span>Remember me</span>
+                    </label>
+                    <a href="#" class="forgot-password" onclick="showForgotPassword()">Forgot password?</a>
+                </div>
+
+                <button type="submit" class="btn-login" id="loginBtn">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <span>Sign In</span>
+                </button>
+            </form>
+
+            <div class="login-footer">
+                <p>Don't have an account? <a href="register.html" style="color: #667eea; text-decoration: none; font-weight: 600;">Create Account</a></p>
+                <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+                    <p style="font-size: 12px; margin-bottom: 12px;">Demo Accounts (Click to auto-fill)</p>
+                    <div class="demo-accounts">
+                        <div class="demo-account" onclick="fillDemoAccount('admin@edusmart.edu', 'admin123')">
+                            <strong>Admin:</strong> admin@edusmart.edu / admin123
+                        </div>
+                        <div class="demo-account" onclick="fillDemoAccount('teacher@edusmart.edu', 'teacher123')">
+                            <strong>Teacher:</strong> teacher@edusmart.edu / teacher123
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check if already logged in
+        if (localStorage.getItem('currentUser')) {
+            window.location.href = 'index.html';
+        }
+
+        const loginForm = document.getElementById('loginForm');
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+        const loginBtn = document.getElementById('loginBtn');
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+
+        // Demo users database
+        const users = [
+            { 
+                id: 1, 
+                email: 'admin@edusmart.edu', 
+                password: 'admin123', 
+                role: 'admin', 
+                name: 'System Administrator',
+                avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=admin'
+            },
+            { 
+                id: 2, 
+                email: 'teacher@edusmart.edu', 
+                password: 'teacher123', 
+                role: 'teacher', 
+                name: 'John Smith',
+                teacherId: 1,
+                avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=john'
+            },
+            { 
+                id: 3, 
+                email: 'sarah@edusmart.edu', 
+                password: 'sarah123', 
+                role: 'teacher', 
+                name: 'Sarah Johnson',
+                teacherId: 2,
+                avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=sarah'
+            }
+        ];
+
+        // Toggle password visibility
+        togglePassword.addEventListener('click', () => {
+            const type = passwordInput.type === 'password' ? 'text' : 'password';
+            passwordInput.type = type;
+            togglePassword.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+        });
+
+        // Fill demo account
+        function fillDemoAccount(email, password) {
+            document.getElementById('email').value = email;
+            document.getElementById('password').value = password;
+            hideMessages();
+        }
+
+        // Show error message
+        function showError(message) {
+            document.getElementById('errorText').textContent = message;
+            errorMessage.classList.add('show');
+            successMessage.classList.remove('show');
+        }
+
+        // Show success message
+        function showSuccess(message) {
+            document.getElementById('successText').textContent = message;
+            successMessage.classList.add('show');
+            errorMessage.classList.remove('show');
+        }
+
+        // Hide messages
+        function hideMessages() {
+            errorMessage.classList.remove('show');
+            successMessage.classList.remove('show');
+        }
+
+        // Show forgot password
+        function showForgotPassword() {
+            showError('Please contact admin to reset your password');
+        }
+
+        // Handle login
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideMessages();
+
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const rememberMe = document.getElementById('rememberMe').checked;
+
+            // Validate inputs
+            if (!email || !password) {
+                showError('Please fill in all fields');
+                return;
+            }
+
+            // Show loading state
+            loginBtn.classList.add('loading');
+            loginBtn.disabled = true;
+            loginBtn.innerHTML = '<i class="fas fa-spinner"></i><span>Signing in...</span>';
+
+            // Simulate API delay
+            await new Promise(resolve => setTimeout(resolve, 1000));
+
+            // Find user
+            const user = users.find(u => u.email === email && u.password === password);
+
+            if (user) {
+                // Create session
+                const session = {
+                    id: user.id,
+                    email: user.email,
+                    role: user.role,
+                    name: user.name,
+                    avatar: user.avatar,
+                    teacherId: user.teacherId || null,
+                    loginTime: new Date().toISOString()
+                };
+
+                // Store session
+                if (rememberMe) {
+                    localStorage.setItem('currentUser', JSON.stringify(session));
+                } else {
+                    sessionStorage.setItem('currentUser', JSON.stringify(session));
+                }
+
+                showSuccess('Login successful! Redirecting...');
+
+                // Redirect to dashboard
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1500);
+            } else {
+                showError('Invalid email or password');
+                loginBtn.classList.remove('loading');
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i><span>Sign In</span>';
+            }
+        });
+
+        // Clear messages on input
+        document.getElementById('email').addEventListener('input', hideMessages);
+        document.getElementById('password').addEventListener('input', hideMessages);
+    </script>
+</body>
+</html>

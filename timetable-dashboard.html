@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timetable Dashboard - Smart Classroom</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background: #fce7f3; min-height: 100vh; color: #831843; }
+        .navbar { background: #ffffff; border-bottom: 2px solid #f9a8d4; padding: 0; position: fixed; top: 0; left: 0; right: 0; z-index: 1000; }
+        .navbar-inner { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; height: 60px; }
+        .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .logo-icon { width: 40px; height: 40px; background: #ec4899; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; }
+        .logo-text { color: #831843; font-weight: 700; font-size: 20px; }
+        .nav-links { display: flex; gap: 5px; }
+        .nav-link { color: #831843; text-decoration: none; padding: 10px 15px; border-radius: 8px; font-size: 14px; font-weight: 500; transition: all 0.3s; cursor: pointer; border: none; background: none; font-family: inherit; }
+        .nav-link:hover, .nav-link.active { background: #fdf2f8; color: #ec4899; }
+        .user-menu { display: flex; align-items: center; gap: 15px; }
+        .user-avatar { width: 35px; height: 35px; background: #ec4899; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; font-weight: 600; }
+        .btn-logout { background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 80px 20px 30px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px; margin-bottom: 25px; }
+        .stat-card { background: #ffffff; border-radius: 12px; border: 2px solid #f9a8d4; padding: 20px; text-align: center; }
+        .stat-value { font-size: 32px; font-weight: 700; color: #ec4899; }
+        .stat-label { color: #831843; font-size: 13px; margin-top: 5px; }
+        .card { background: #ffffff; border-radius: 15px; border: 2px solid #f9a8d4; padding: 25px; margin-bottom: 25px; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .card-header h3 { color: #831843; font-size: 18px; }
+        .btn-primary { background: #ec4899; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; }
+        .btn-secondary { background: #fdf2f8; color: #ec4899; border: 2px solid #ec4899; padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; }
+        .timetable-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .day-column { background: #fdf2f8; border-radius: 12px; padding: 20px; border: 2px solid #f9a8d4; }
+        .day-header { background: #ec4899; color: white; padding: 12px; border-radius: 8px; text-align: center; font-weight: 600; margin-bottom: 15px; text-transform: uppercase; }
+        .timetable-entry { background: #ffffff; border-radius: 10px; padding: 15px; margin-bottom: 12px; border: 1px solid #f9a8d4; }
+        .entry-time { background: #ec4899; color: white; padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; display: inline-block; margin-bottom: 10px; }
+        .entry-course { font-weight: 600; color: #831843; font-size: 15px; margin-bottom: 5px; }
+        .entry-details { color: #be185d; font-size: 13px; }
+        .entry-details i { margin-right: 5px; color: #ec4899; }
+        .empty-day { text-align: center; padding: 30px; color: #be185d; font-size: 14px; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center; }
+        .modal-overlay.show { display: flex; }
+        .modal { background: #ffffff; border-radius: 20px; border: 2px solid #f9a8d4; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto; }
+        .modal-header { padding: 25px; border-bottom: 2px solid #f9a8d4; display: flex; justify-content: space-between; align-items: center; }
+        .modal-body { padding: 25px; }
+        .modal-footer { padding: 20px 25px; border-top: 2px solid #f9a8d4; display: flex; justify-content: flex-end; gap: 10px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; color: #831843; font-size: 14px; font-weight: 500; }
+        .form-control { width: 100%; padding: 12px 15px; background: #fdf2f8; border: 2px solid #f9a8d4; border-radius: 10px; color: #831843; font-size: 14px; font-family: inherit; }
+        .form-control:focus { outline: none; border-color: #ec4899; background: #ffffff; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .alert { padding: 12px 16px; border-radius: 10px; margin-bottom: 20px; font-size: 14px; display: none; }
+        .alert.show { display: block; }
+        .alert-error { background: #fee2e2; border: 1px solid #fecaca; color: #dc2626; }
+        .alert-success { background: #d1fae5; border: 1px solid #a7f3d0; color: #059669; }
+        .conflict-warning { background: #fef3c7; border: 1px solid #fbbf24; color: #92400e; padding: 12px; border-radius: 8px; margin-bottom: 15px; display: none; }
+        .conflict-warning.show { display: block; }
+        @media (max-width: 900px) { .stats-grid { grid-template-columns: repeat(3, 1fr); } .form-row { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-inner">
+            <a href="#" class="logo">
+                <div class="logo-icon"><i class="fas fa-graduation-cap"></i></div>
+                <span class="logo-text">EduSmart</span>
+            </a>
+            <div class="nav-links">
+                <button class="nav-link active" onclick="showTab('dashboard')">
+                    <i class="fas fa-chart-line"></i> Dashboard
+                </button>
+                <button class="nav-link" onclick="showTab('timetable')">
+                    <i class="fas fa-calendar-alt"></i> Timetable
+                </button>
+                <button class="nav-link" onclick="showTab('courses')">
+                    <i class="fas fa-book"></i> Courses
+                </button>
+            </div>
+            <div class="user-menu">
+                <div class="user-avatar" id="userAvatar">A</div>
+                <span id="userName">Admin</span>
+                <button class="btn-logout" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="alert alert-error" id="errorAlert"></div>
+        <div class="alert alert-success" id="successAlert"></div>
+
+        <!-- Dashboard Tab -->
+        <div id="dashboard-tab">
+            <h1 style="margin-bottom: 5px;"><i class="fas fa-chart-line"></i> Dashboard</h1>
+            <p style="color: #be185d; margin-bottom: 25px;">Overview of your Smart Classroom</p>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="statTeachers">0</div>
+                    <div class="stat-label">Teachers</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="statCourses">0</div>
+                    <div class="stat-label">Courses</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="statClassrooms">0</div>
+                    <div class="stat-label">Classrooms</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="statEntries">0</div>
+                    <div class="stat-label">Timetable Entries</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="statToday">0</div>
+                    <div class="stat-label">Classes Today</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-clock"></i> Today's Schedule - <span id="todayDate"></span></h3>
+                    <button class="btn-primary" onclick="openAddModal()">
+                        <i class="fas fa-plus"></i> Add Entry
+                    </button>
+                </div>
+                <div id="todaySchedule"></div>
+            </div>
+        </div>
+
+        <!-- Timetable Tab -->
+        <div id="timetable-tab" style="display: none;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                <h1><i class="fas fa-calendar-alt"></i> Full Timetable</h1>
+                <button class="btn-primary" onclick="openAddModal()">
+                    <i class="fas fa-plus"></i> Add New Entry
+                </button>
+            </div>
+            <div class="timetable-grid" id="fullTimetable"></div>
+        </div>
+
+        <!-- Courses Tab -->
+        <div id="courses-tab" style="display: none;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                <h1><i class="fas fa-book"></i> Courses</h1>
+                <button class="btn-primary" onclick="openAddCourseModal()">
+                    <i class="fas fa-plus"></i> Add Course
+                </button>
+            </div>
+            <div id="coursesList"></div>
+        </div>
+    </div>
+
+    <!-- Add Timetable Entry Modal -->
+    <div class="modal-overlay" id="addModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-plus"></i> Add Timetable Entry</h3>
+                <button style="background: none; border: none; font-size: 24px; cursor: pointer;" onclick="closeModal('addModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="conflict-warning" id="conflictWarning">
+                    <i class="fas fa-exclamation-triangle"></i> <span id="conflictText"></span>
+                </div>
+                <div class="alert alert-error" id="formError"></div>
+                
+                <form id="timetableForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-book"></i> Course *</label>
+                            <select class="form-control" id="courseSelect" required>
+                                <option value="">-- Select Course --</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-chalkboard-teacher"></i> Teacher *</label>
+                            <select class="form-control" id="teacherSelect" required>
+                                <option value="">-- Select Teacher --</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-door-open"></i> Classroom *</label>
+                            <select class="form-control" id="classroomSelect" required>
+                                <option value="">-- Select Classroom --</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-calendar-day"></i> Day *</label>
+                            <select class="form-control" id="daySelect" required>
+                                <option value="monday">Monday</option>
+                                <option value="tuesday">Tuesday</option>
+                                <option value="wednesday">Wednesday</option>
+                                <option value="thursday">Thursday</option>
+                                <option value="friday">Friday</option>
+                                <option value="saturday">Saturday</option>
+                                <option value="sunday">Sunday</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-clock"></i> Start Time *</label>
+                            <input type="time" class="form-control" id="startTime" required>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-clock"></i> End Time *</label>
+                            <input type="time" class="form-control" id="endTime" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-tag"></i> Class Type</label>
+                        <select class="form-control" id="typeSelect">
+                            <option value="lecture">Lecture</option>
+                            <option value="lab">Lab</option>
+                            <option value="seminar">Seminar</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeModal('addModal')">Cancel</button>
+                <button class="btn-primary" onclick="saveTimetableEntry()">
+                    <i class="fas fa-save"></i> Save Entry
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Course Modal -->
+    <div class="modal-overlay" id="addCourseModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-plus"></i> Add Course</h3>
+                <button style="background: none; border: none; font-size: 24px; cursor: pointer;" onclick="closeModal('addCourseModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="courseForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Course Code *</label>
+                            <input type="text" class="form-control" id="courseCode" placeholder="CS101" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Credits *</label>
+                            <input type="number" class="form-control" id="courseCredits" value="3" min="1" max="6" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Course Name *</label>
+                        <input type="text" class="form-control" id="courseName" placeholder="Introduction to Programming" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Department *</label>
+                            <select class="form-control" id="courseDept" required>
+                                <option value="Computer Science">Computer Science</option>
+                                <option value="Mathematics">Mathematics</option>
+                                <option value="Physics">Physics</option>
+                                <option value="Chemistry">Chemistry</option>
+                                <option value="Biology">Biology</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Assign Teachers</label>
+                            <select class="form-control" id="courseTeachers" multiple size="3"></select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeModal('addCourseModal')">Cancel</button>
+                <button class="btn-primary" onclick="saveCourse()">Save Course</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global data storage
+        let teachersData = [];
+        let coursesData = [];
+        let classroomsData = [];
+        let timetableData = [];
+        
+        const token = localStorage.getItem('token');
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        
+        if (!token) window.location.href = 'login-fixed.html';
+        
+        document.getElementById('userName').textContent = user.firstName || 'User';
+        document.getElementById('userAvatar').textContent = (user.firstName || 'U')[0].toUpperCase();
+        
+        // API helper
+        async function api(url, options = {}) {
+            const res = await fetch(url, {
+                ...options,
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`, ...options.headers }
+            });
+            return res.json();
+        }
+        
+        // Load all data
+        async function loadAllData() {
+            try {
+                const [teachersRes, coursesRes, classroomsRes, timetableRes, statsRes, todayRes] = await Promise.all([
+                    api('/api/teachers'),
+                    api('/api/courses'),
+                    api('/api/classrooms'),
+                    api('/api/timetable'),
+                    api('/api/dashboard/stats'),
+                    api('/api/dashboard/today')
+                ]);
+                
+                if (teachersRes.success) teachersData = teachersRes.data;
+                if (coursesRes.success) coursesData = coursesRes.data;
+                if (classroomsRes.success) classroomsData = classroomsRes.data;
+                if (timetableRes.success) timetableData = timetableRes.data;
+                
+                // Update stats
+                if (statsRes.success) {
+                    document.getElementById('statTeachers').textContent = statsRes.data.total_teachers;
+                    document.getElementById('statCourses').textContent = statsRes.data.total_courses;
+                    document.getElementById('statClassrooms').textContent = statsRes.data.total_classrooms;
+                    document.getElementById('statEntries').textContent = statsRes.data.total_timetable_entries;
+                    document.getElementById('statToday').textContent = statsRes.data.today_entries;
+                }
+                
+                // Update displays
+                updateTodaySchedule(todayRes.data || []);
+                updateFullTimetable();
+                updateCoursesList();
+                updateDropdowns();
+                
+            } catch (e) {
+                showError('Failed to load data: ' + e.message);
+            }
+        }
+        
+        // Update dropdowns with IDs
+        function updateDropdowns() {
+            // Course dropdown - stores course_id
+            const courseSelect = document.getElementById('courseSelect');
+            courseSelect.innerHTML = '<option value="">-- Select Course --</option>' +
+                coursesData.map(c => `<option value="${c._id}">${c.code} - ${c.name}</option>`).join('');
+            
+            // Teacher dropdown - stores teacher_id
+            const teacherSelect = document.getElementById('teacherSelect');
+            teacherSelect.innerHTML = '<option value="">-- Select Teacher --</option>' +
+                teachersData.map(t => `<option value="${t._id}">${t.firstName} ${t.lastName} (${t.department})</option>`).join('');
+            
+            // Classroom dropdown - stores class_id
+            const classroomSelect = document.getElementById('classroomSelect');
+            classroomSelect.innerHTML = '<option value="">-- Select Classroom --</option>' +
+                classroomsData.map(c => `<option value="${c._id}">${c.name} (${c.type}, ${c.capacity} seats)</option>`).join('');
+            
+            // Course teachers multi-select
+            const courseTeachers = document.getElementById('courseTeachers');
+            courseTeachers.innerHTML = teachersData.map(t => 
+                `<option value="${t._id}">${t.firstName} ${t.lastName}</option>`
+            ).join('');
+        }
+        
+        // Update today's schedule display
+        function updateTodaySchedule(entries) {
+            const container = document.getElementById('todaySchedule');
+            document.getElementById('todayDate').textContent = new Date().toLocaleDateString('en-US', { 
+                weekday: 'long', month: 'short', day: 'numeric' 
+            });
+            
+            if (entries.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 40px; color: #be185d;"><i class="fas fa-calendar-day" style="font-size: 48px; color: #f9a8d4; margin-bottom: 15px;"></i><p>No classes scheduled for today</p></div>';
+                return;
+            }
+            
+            container.innerHTML = entries.map(entry => `
+                <div style="display: flex; align-items: center; gap: 15px; padding: 15px; background: #fdf2f8; border-radius: 10px; margin-bottom: 10px; border: 1px solid #f9a8d4;">
+                    <div style="background: #ec4899; color: white; padding: 10px 15px; border-radius: 8px; font-weight: 600; min-width: 100px; text-align: center;">
+                        ${entry.start_time}<br><small>to</small><br>${entry.end_time}
+                    </div>
+                    <div style="flex: 1;">
+                        <div style="font-weight: 600; color: #831843; font-size: 16px;">${entry.course_id?.code} - ${entry.course_id?.name}</div>
+                        <div style="color: #be185d; font-size: 13px; margin-top: 5px;">
+                            <i class="fas fa-chalkboard-teacher" style="color: #ec4899;"></i> ${entry.teacher_id?.firstName} ${entry.teacher_id?.lastName}
+                            <span style="margin: 0 10px;">|</span>
+                            <i class="fas fa-door-open" style="color: #ec4899;"></i> ${entry.class_id?.name}
+                        </div>
+                    </div>
+                    <button onclick="deleteEntry('${entry._id}')" style="background: #fee2e2; color: #dc2626; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer;">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+        
+        // Update full timetable - grouped by day
+        function updateFullTimetable() {
+            const container = document.getElementById('fullTimetable');
+            const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+            const dayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+            
+            let html = '';
+            days.forEach((day, index) => {
+                const dayEntries = timetableData.filter(e => e.day === day).sort((a, b) => a.start_time.localeCompare(b.start_time));
+                
+                html += `
+                    <div class="day-column">
+                        <div class="day-header">${dayNames[index]}</div>
+                        ${dayEntries.length === 0 ? 
+                            '<div class="empty-day"><i class="fas fa-calendar-times" style="font-size: 24px; margin-bottom: 10px;"></i><br>No classes</div>' :
+                            dayEntries.map(entry => `
+                                <div class="timetable-entry">
+                                    <div class="entry-time">${entry.start_time} - ${entry.end_time}</div>
+                                    <div class="entry-course">${entry.course_id?.code} - ${entry.course_id?.name}</div>
+                                    <div class="entry-details">
+                                        <div><i class="fas fa-chalkboard-teacher"></i> ${entry.teacher_id?.firstName} ${entry.teacher_id?.lastName}</div>
+                                        <div><i class="fas fa-door-open"></i> ${entry.class_id?.name} (${entry.class_id?.type})</div>
+                                    </div>
+                                </div>
+                            `).join('')
+                        }
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        // Update courses list
+        function updateCoursesList() {
+            const container = document.getElementById('coursesList');
+            if (coursesData.length === 0) {
+                container.innerHTML = '<div class="card"><div style="text-align: center; padding: 40px; color: #be185d;">No courses available</div></div>';
+                return;
+            }
+            
+            container.innerHTML = coursesData.map(course => `
+                <div class="card" style="margin-bottom: 15px;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div>
+                            <div style="font-size: 20px; font-weight: 700; color: #ec4899;">${course.code}</div>
+                            <div style="font-size: 16px; color: #831843; font-weight: 600;">${course.name}</div>
+                            <div style="color: #be185d; font-size: 13px; margin-top: 5px;">
+                                <i class="fas fa-building"></i> ${course.department} | 
+                                <i class="fas fa-star"></i> ${course.credits} credits
+                            </div>
+                            <div style="margin-top: 10px;">
+                                ${course.teacher_ids?.map(t => `<span style="background: #fdf2f8; color: #831843; padding: 4px 10px; border-radius: 4px; font-size: 12px; margin-right: 5px;">${t.firstName} ${t.lastName}</span>`).join('') || 'No teachers assigned'}
+                            </div>
+                        </div>
+                        <button onclick="deleteCourse('${course._id}')" style="background: #fee2e2; color: #dc2626; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer;">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // Tab navigation
+        function showTab(tab) {
+            document.getElementById('dashboard-tab').style.display = tab === 'dashboard' ? 'block' : 'none';
+            document.getElementById('timetable-tab').style.display = tab === 'timetable' ? 'block' : 'none';
+            document.getElementById('courses-tab').style.display = tab === 'courses' ? 'block' : 'none';
+            
+            document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
+            event.target.closest('.nav-link').classList.add('active');
+        }
+        
+        // Modal functions
+        function openAddModal() {
+            document.getElementById('conflictWarning').classList.remove('show');
+            document.getElementById('formError').classList.remove('show');
+            document.getElementById('timetableForm').reset();
+            document.getElementById('addModal').classList.add('show');
+        }
+        
+        function openAddCourseModal() {
+            document.getElementById('courseForm').reset();
+            document.getElementById('addCourseModal').classList.add('show');
+        }
+        
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('show');
+        }
+        
+        // Save timetable entry with CORRECT FIELD NAMES
+        async function saveTimetableEntry() {
+            // Get values from form - using snake_case to match backend
+            const data = {
+                course_id: document.getElementById('courseSelect').value,
+                teacher_id: document.getElementById('teacherSelect').value,
+                class_id: document.getElementById('classroomSelect').value,
+                day: document.getElementById('daySelect').value,
+                start_time: document.getElementById('startTime').value,
+                end_time: document.getElementById('endTime').value,
+                type: document.getElementById('typeSelect').value,
+                semester: 'Fall 2024'
+            };
+            
+            // Validate
+            if (!data.course_id || !data.teacher_id || !data.class_id || !data.start_time || !data.end_time) {
+                document.getElementById('formError').textContent = 'Please fill all required fields';
+                document.getElementById('formError').classList.add('show');
+                return;
+            }
+            
+            try {
+                const result = await api('/api/timetable', {
+                    method: 'POST',
+                    body: JSON.stringify(data)
+                });
+                
+                if (result.success) {
+                    closeModal('addModal');
+                    showSuccess('Timetable entry added successfully!');
+                    loadAllData(); // Refresh all data
+                } else {
+                    // Show conflict or error
+                    if (result.conflict_type) {
+                        document.getElementById('conflictText').textContent = result.message;
+                        document.getElementById('conflictWarning').classList.add('show');
+                    } else {
+                        document.getElementById('formError').textContent = result.message;
+                        document.getElementById('formError').classList.add('show');
+                    }
+                }
+            } catch (e) {
+                document.getElementById('formError').textContent = 'Error: ' + e.message;
+                document.getElementById('formError').classList.add('show');
+            }
+        }
+        
+        // Save course
+        async function saveCourse() {
+            const data = {
+                code: document.getElementById('courseCode').value,
+                name: document.getElementById('courseName').value,
+                credits: parseInt(document.getElementById('courseCredits').value),
+                department: document.getElementById('courseDept').value,
+                teacher_ids: Array.from(document.getElementById('courseTeachers').selectedOptions).map(o => o.value)
+            };
+            
+            try {
+                const result = await api('/api/courses', {
+                    method: 'POST',
+                    body: JSON.stringify(data)
+                });
+                
+                if (result.success) {
+                    closeModal('addCourseModal');
+                    showSuccess('Course added successfully!');
+                    loadAllData();
+                } else {
+                    showError(result.message);
+                }
+            } catch (e) {
+                showError('Error: ' + e.message);
+            }
+        }
+        
+        // Delete functions
+        async function deleteEntry(id) {
+            if (!confirm('Delete this timetable entry?')) return;
+            try {
+                await api(`/api/timetable/${id}`, { method: 'DELETE' });
+                showSuccess('Entry deleted');
+                loadAllData();
+            } catch (e) {
+                showError('Failed to delete');
+            }
+        }
+        
+        async function deleteCourse(id) {
+            if (!confirm('Delete this course?')) return;
+            try {
+                await api(`/api/courses/${id}`, { method: 'DELETE' });
+                showSuccess('Course deleted');
+                loadAllData();
+            } catch (e) {
+                showError('Failed to delete');
+            }
+        }
+        
+        // Alert functions
+        function showError(msg) {
+            document.getElementById('errorAlert').textContent = msg;
+            document.getElementById('errorAlert').classList.add('show');
+            setTimeout(() => document.getElementById('errorAlert').classList.remove('show'), 5000);
+        }
+        
+        function showSuccess(msg) {
+            document.getElementById('successAlert').textContent = msg;
+            document.getElementById('successAlert').classList.add('show');
+            setTimeout(() => document.getElementById('successAlert').classList.remove('show'), 3000);
+        }
+        
+        // Logout
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'login-fixed.html';
+        }
+        
+        // Close modals on overlay click
+        document.querySelectorAll('.modal-overlay').forEach(o => {
+            o.addEventListener('click', e => { if (e.target === o) o.classList.remove('show'); });
+        });
+        
+        // Load data on page load
+        loadAllData();
+    </script>
+</body>
+</html>

@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Smart Classroom & Timetable Scheduler</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: #fce7f3;
+        }
+
+        .register-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .register-box {
+            background: #ffffff;
+            border-radius: 24px;
+            border: 1px solid #f9a8d4;
+            padding: 40px;
+            width: 100%;
+            max-width: 480px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .register-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .register-logo {
+            width: 70px;
+            height: 70px;
+            background: #ec4899;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 32px;
+            color: white;
+        }
+
+        .register-header h1 {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #831843;
+        }
+
+        .register-header p {
+            color: #be185d;
+            font-size: 14px;
+        }
+
+        .register-form .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .register-form .form-group {
+            margin-bottom: 20px;
+        }
+
+        .register-form label {
+            display: block;
+            margin-bottom: 8px;
+            color: #831843;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #ec4899;
+            font-size: 16px;
+        }
+
+        .register-form input,
+        .register-form select {
+            width: 100%;
+            padding: 14px 14px 14px 44px;
+            background: #fdf2f8;
+            border: 2px solid #f9a8d4;
+            border-radius: 10px;
+            color: #831843;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .register-form input:focus,
+        .register-form select:focus {
+            outline: none;
+            border-color: #ec4899;
+            background: #ffffff;
+        }
+
+        .register-form input::placeholder {
+            color: #f472b6;
+        }
+
+        .register-form select {
+            cursor: pointer;
+            appearance: none;
+        }
+
+        .register-form select option {
+            background: #ffffff;
+            color: #831843;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #ec4899;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .btn-register {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-register:hover {
+            background: #be185d;
+        }
+
+        .btn-register:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .register-footer {
+            text-align: center;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid #f9a8d4;
+        }
+
+        .register-footer p {
+            color: #be185d;
+            font-size: 14px;
+        }
+
+        .register-footer a {
+            color: #ec4899;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .register-footer a:hover {
+            color: #be185d;
+        }
+
+        .error-message, .success-message {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .error-message {
+            background: #fee2e2;
+            border: 1px solid #fecaca;
+            color: #dc2626;
+        }
+
+        .success-message {
+            background: #d1fae5;
+            border: 1px solid #a7f3d0;
+            color: #059669;
+        }
+
+        .error-message.show, .success-message.show {
+            display: flex;
+        }
+
+        @media (max-width: 480px) {
+            .register-form .form-row {
+                grid-template-columns: 1fr;
+            }
+            .register-box {
+                padding: 28px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav style="background: #ffffff; border-bottom: 2px solid #f9a8d4; padding: 0; position: fixed; top: 0; left: 0; right: 0; z-index: 1000;">
+        <div style="max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; height: 60px;">
+            <a href="home.html" style="text-decoration: none; display: flex; align-items: center; gap: 10px;">
+                <div style="width: 40px; height: 40px; background: #ec4899; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px;">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <span style="color: #831843; font-weight: 700; font-size: 20px;">EduSmart</span>
+            </a>
+            <div style="display: flex; align-items: center; gap: 5px;">
+                <a href="home.html" style="color: #831843; text-decoration: none; padding: 10px 15px; border-radius: 8px; font-size: 14px; font-weight: 500;"><i class="fas fa-home"></i> Home</a>
+                <a href="index.html" style="color: #831843; text-decoration: none; padding: 10px 15px; border-radius: 8px; font-size: 14px; font-weight: 500;"><i class="fas fa-chart-line"></i> Dashboard</a>
+                <a href="timetable-view.html" style="color: #831843; text-decoration: none; padding: 10px 15px; border-radius: 8px; font-size: 14px; font-weight: 500;"><i class="fas fa-calendar-alt"></i> Timetable</a>
+                <a href="courses-view.html" style="color: #831843; text-decoration: none; padding: 10px 15px; border-radius: 8px; font-size: 14px; font-weight: 500;"><i class="fas fa-book"></i> Courses</a>
+                <a href="optimizer-dashboard.html" style="color: #831843; text-decoration: none; padding: 10px 15px; border-radius: 8px; font-size: 14px; font-weight: 500;"><i class="fas fa-magic"></i> Optimizer</a>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <a href="login.html" style="background: #fdf2f8; color: #ec4899; border: 1px solid #ec4899; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: 600;"><i class="fas fa-sign-in-alt"></i> Login</a>
+                <button onclick="logout()" style="background: #ec4899; color: white; border: none; padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer;"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="register-container" style="padding-top: 80px;">
+        <div class="register-box">
+            <div class="register-header">
+                <div class="register-logo">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <h1>Create Account</h1>
+                <p>Join Smart Classroom Scheduler</p>
+            </div>
+
+            <div class="error-message" id="errorMessage">
+                <i class="fas fa-exclamation-circle"></i>
+                <span id="errorText"></span>
+            </div>
+
+            <div class="success-message" id="successMessage">
+                <i class="fas fa-check-circle"></i>
+                <span id="successText">Registration successful! Redirecting...</span>
+            </div>
+
+            <form class="register-form" id="registerForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="firstName" placeholder="First name" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="lastName" placeholder="Last name" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="email" placeholder="your@email.com" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-phone"></i>
+                        <input type="tel" id="phone" placeholder="+1 (555) 000-0000">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="department">Department</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-building"></i>
+                            <select id="department" required>
+                                <option value="">Select Dept</option>
+                                <option value="cs">Computer Science</option>
+                                <option value="math">Mathematics</option>
+                                <option value="physics">Physics</option>
+                                <option value="chemistry">Chemistry</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="role">Role</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-user-tag"></i>
+                            <select id="role" required>
+                                <option value="teacher">Teacher</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="password" placeholder="Create password" required minlength="6">
+                        <button type="button" class="password-toggle" id="togglePassword">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="confirmPassword" placeholder="Confirm password" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-register" id="registerBtn">
+                    <i class="fas fa-user-plus"></i> Create Account
+                </button>
+            </form>
+
+            <div class="register-footer">
+                <p>Already have an account? <a href="login.html">Sign In</a></p>
+                <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #f9a8d4;">
+                    <p style="font-size: 12px; color: #be185d; margin-bottom: 10px;">Quick Links:</p>
+                    <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
+                        <a href="home.html" style="color: #ec4899; text-decoration: none; font-size: 13px;"><i class="fas fa-home"></i> Home</a>
+                        <a href="index.html" style="color: #ec4899; text-decoration: none; font-size: 13px;"><i class="fas fa-chart-line"></i> Dashboard</a>
+                        <a href="optimizer-dashboard.html" style="color: #ec4899; text-decoration: none; font-size: 13px;"><i class="fas fa-magic"></i> Optimizer</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Logout function
+        function logout() {
+            localStorage.removeItem('currentUser');
+            sessionStorage.removeItem('currentUser');
+            window.location.href = 'login.html';
+        }
+
+        // Check if already logged in
+        if (localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser')) {
+            window.location.href = 'index.html';
+        }
+
+        const form = document.getElementById('registerForm');
+        const errorMsg = document.getElementById('errorMessage');
+        const successMsg = document.getElementById('successMessage');
+        const toggleBtn = document.getElementById('togglePassword');
+
+        // Toggle password visibility
+        toggleBtn.addEventListener('click', () => {
+            const pwd = document.getElementById('password');
+            const type = pwd.type === 'password' ? 'text' : 'password';
+            pwd.type = type;
+            toggleBtn.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+        });
+
+        function showError(msg) {
+            document.getElementById('errorText').textContent = msg;
+            errorMsg.classList.add('show');
+            successMsg.classList.remove('show');
+        }
+
+        function showSuccess() {
+            successMsg.classList.add('show');
+            errorMsg.classList.remove('show');
+        }
+
+        // Handle registration
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            errorMsg.classList.remove('show');
+
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const department = document.getElementById('department').value;
+            const role = document.getElementById('role').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            // Validation
+            if (password !== confirmPassword) {
+                showError('Passwords do not match');
+                return;
+            }
+
+            if (password.length < 6) {
+                showError('Password must be at least 6 characters');
+                return;
+            }
+
+            const btn = document.getElementById('registerBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating...';
+
+            // Simulate API delay
+            await new Promise(r => setTimeout(r, 1500));
+
+            // Create user (in real app, send to backend)
+            const user = {
+                id: Date.now(),
+                firstName,
+                lastName,
+                email,
+                role,
+                department,
+                avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${firstName.toLowerCase()}`,
+                loginTime: new Date().toISOString()
+            };
+
+            // Store session
+            localStorage.setItem('currentUser', JSON.stringify(user));
+
+            showSuccess();
+
+            // Redirect to dashboard
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 2000);
+        });
+
+        // Clear errors on input
+        form.querySelectorAll('input').forEach(input => {
+            input.addEventListener('input', () => errorMsg.classList.remove('show'));
+        });
+    </script>
+</body>
+</html>

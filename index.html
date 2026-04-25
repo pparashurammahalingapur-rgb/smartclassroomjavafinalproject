@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Classroom & Timetable Scheduler</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar" style="background: #ffffff; border-bottom: 1px solid #f9a8d4;">
+        <div class="nav-brand">
+            <i class="fas fa-graduation-cap"></i>
+            <span>EduSmart</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#dashboard" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li><a href="#timetable"><i class="fas fa-calendar-alt"></i> Timetable</a></li>
+            <li><a href="#classrooms"><i class="fas fa-door-open"></i> Classrooms</a></li>
+            <li><a href="#courses"><i class="fas fa-book"></i> Courses</a></li>
+            <li><a href="#teachers"><i class="fas fa-chalkboard-teacher"></i> Teachers</a></li>
+        </ul>
+        <div class="nav-actions">
+            <button class="btn-notification">
+                <i class="fas fa-bell"></i>
+                <span class="badge">3</span>
+            </button>
+            <div class="user-profile">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=admin" alt="Admin">
+                <span>Admin</span>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-container">
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="section active">
+            <div class="section-header">
+                <h1><i class="fas fa-chart-line"></i> Dashboard</h1>
+                <p class="subtitle">Overview of your smart classroom system</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card gradient-purple">
+                    <div class="stat-icon"><i class="fas fa-door-open"></i></div>
+                    <div class="stat-info">
+                        <h3 id="totalClassrooms">12</h3>
+                        <p>Total Classrooms</p>
+                    </div>
+                    <div class="stat-trend up">
+                        <i class="fas fa-arrow-up"></i> 2 new
+                    </div>
+                </div>
+                <div class="stat-card gradient-blue">
+                    <div class="stat-icon"><i class="fas fa-book"></i></div>
+                    <div class="stat-info">
+                        <h3 id="totalCourses">48</h3>
+                        <p>Active Courses</p>
+                    </div>
+                    <div class="stat-trend up">
+                        <i class="fas fa-arrow-up"></i> 5 this week
+                    </div>
+                </div>
+                <div class="stat-card gradient-green">
+                    <div class="stat-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+                    <div class="stat-info">
+                        <h3 id="totalTeachers">4</h3>
+                        <p>Teachers</p>
+                    </div>
+                    <div class="stat-trend up">
+                        <i class="fas fa-arrow-up"></i> 1 new
+                    </div>
+                </div>
+                <div class="stat-card gradient-orange">
+                    <div class="stat-icon"><i class="fas fa-users"></i></div>
+                    <div class="stat-info">
+                        <h3 id="totalStudents">1,256</h3>
+                        <p>Students</p>
+                    </div>
+                    <div class="stat-trend up">
+                        <i class="fas fa-arrow-up"></i> 12% growth
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Features: Timetable & Courses -->
+            <div class="dashboard-grid" style="grid-template-columns: 1fr 1fr; margin-bottom: 25px;">
+                <!-- Timetable Feature Card -->
+                <div class="card glass" style="border: 2px solid #ec4899;">
+                    <div class="card-header" style="background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%); margin: -25px -25px 20px -25px; padding: 20px 25px; border-radius: 20px 20px 0 0; border-bottom: 2px solid #f9a8d4;">
+                        <h3 style="color: #831843; font-size: 20px;"><i class="fas fa-calendar-alt" style="color: #ec4899;"></i> Timetable Management</h3>
+                        <a href="timetable-view.html" class="btn-view-all" style="background: #ec4899; color: white; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 13px;">View Full Timetable</a>
+                    </div>
+                    <div style="padding: 10px 0;">
+                        <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 20px;">
+                            <div style="background: #fdf2f8; padding: 15px; border-radius: 10px; text-align: center; border: 1px solid #f9a8d4;">
+                                <div style="font-size: 24px; font-weight: 700; color: #ec4899;">6</div>
+                                <div style="font-size: 12px; color: #831843;">Classes Today</div>
+                            </div>
+                            <div style="background: #fdf2f8; padding: 15px; border-radius: 10px; text-align: center; border: 1px solid #f9a8d4;">
+                                <div style="font-size: 24px; font-weight: 700; color: #ec4899;">30</div>
+                                <div style="font-size: 12px; color: #831843;">Weekly Classes</div>
+                            </div>
+                            <div style="background: #fdf2f8; padding: 15px; border-radius: 10px; text-align: center; border: 1px solid #f9a8d4;">
+                                <div style="font-size: 24px; font-weight: 700; color: #10b981;">3</div>
+                                <div style="font-size: 12px; color: #831843;">Available Rooms</div>
+                            </div>
+                            <div style="background: #fdf2f8; padding: 15px; border-radius: 10px; text-align: center; border: 1px solid #f9a8d4;">
+                                <div style="font-size: 24px; font-weight: 700; color: #f59e0b;">2</div>
+                                <div style="font-size: 12px; color: #831843;">Conflicts</div>
+                            </div>
+                            <div style="background: #fdf2f8; padding: 15px; border-radius: 10px; text-align: center; border: 1px solid #f9a8d4;">
+                                <div style="font-size: 24px; font-weight: 700; color: #8b5cf6;">5</div>
+                                <div style="font-size: 12px; color: #831843;">Departments</div>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                            <a href="timetable-view.html" style="flex: 1; background: #ec4899; color: white; padding: 12px; border-radius: 10px; text-align: center; text-decoration: none; font-weight: 600; font-size: 14px;"><i class="fas fa-eye"></i> View Schedule</a>
+                            <a href="optimizer-dashboard.html" style="flex: 1; background: #fdf2f8; color: #ec4899; border: 2px solid #ec4899; padding: 12px; border-radius: 10px; text-align: center; text-decoration: none; font-weight: 600; font-size: 14px;"><i class="fas fa-magic"></i> Generate New</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Courses Feature Card -->
+                <div class="card glass" style="border: 2px solid #ec4899;">
+                    <div class="card-header" style="background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%); margin: -25px -25px 20px -25px; padding: 20px 25px; border-radius: 20px 20px 0 0; border-bottom: 2px solid #f9a8d4;">
+                        <h3 style="color: #831843; font-size: 20px;"><i class="fas fa-book" style="color: #ec4899;"></i> Course Management</h3>
+                        <a href="courses-view.html" class="btn-view-all" style="background: #ec4899; color: white; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 13px;">View All Courses</a>
+                    </div>
+                    <div style="padding: 10px 0;">
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 20px;">
+                            <div style="background: #ffffff; border: 2px solid #f9a8d4; padding: 20px; border-radius: 12px; text-align: center;">
+                                <div style="font-size: 36px; font-weight: 700; color: #ec4899;">6</div>
+                                <div style="font-size: 14px; color: #831843; margin-top: 5px;">Total Courses</div>
+                                <div style="font-size: 12px; color: #be185d; margin-top: 3px;">Across 3 departments</div>
+                            </div>
+                            <div style="background: #ffffff; border: 2px solid #f9a8d4; padding: 20px; border-radius: 12px; text-align: center;">
+                                <div style="font-size: 36px; font-weight: 700; color: #10b981;">22</div>
+                                <div style="font-size: 14px; color: #831843; margin-top: 5px;">Total Credits</div>
+                                <div style="font-size: 12px; color: #be185d; margin-top: 3px;">Average 3.7 per course</div>
+                            </div>
+                        </div>
+                        <div style="background: #fdf2f8; border-radius: 10px; padding: 15px; margin-bottom: 15px;">
+                            <div style="font-size: 13px; font-weight: 600; color: #831843; margin-bottom: 10px;">Quick Course Access:</div>
+                            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                                <a href="courses-view.html" style="background: #ec4899; color: white; padding: 6px 12px; border-radius: 6px; text-decoration: none; font-size: 12px;">CS101</a>
+                                <a href="courses-view.html" style="background: #ec4899; color: white; padding: 6px 12px; border-radius: 6px; text-decoration: none; font-size: 12px;">CS201</a>
+                                <a href="courses-view.html" style="background: #ec4899; color: white; padding: 6px 12px; border-radius: 6px; text-decoration: none; font-size: 12px;">MATH101</a>
+                                <a href="courses-view.html" style="background: #ec4899; color: white; padding: 6px 12px; border-radius: 6px; text-decoration: none; font-size: 12px;">PHY101</a>
+                                <a href="courses-view.html" style="background: #fdf2f8; color: #ec4899; border: 1px solid #ec4899; padding: 6px 12px; border-radius: 6px; text-decoration: none; font-size: 12px;">+2 more</a>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <a href="courses-view.html" style="flex: 1; background: #ec4899; color: white; padding: 12px; border-radius: 10px; text-align: center; text-decoration: none; font-weight: 600; font-size: 14px;"><i class="fas fa-list"></i> All Courses</a>
+                            <a href="#" onclick="openModal('addCourseModal'); return false;" style="flex: 1; background: #fdf2f8; color: #ec4899; border: 2px solid #ec4899; padding: 12px; border-radius: 10px; text-align: center; text-decoration: none; font-weight: 600; font-size: 14px;"><i class="fas fa-plus"></i> Add Course</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Original Dashboard Cards -->
+            <div class="dashboard-grid">
+                <div class="card glass">
+                    <div class="card-header">
+                        <h3><i class="fas fa-clock"></i> Today's Schedule</h3>
+                        <button class="btn-view-all">View All</button>
+                    </div>
+                    <div class="schedule-list" id="todaySchedule">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <div class="card glass">
+                    <div class="card-header">
+                        <h3><i class="fas fa-door-closed"></i> Room Status</h3>
+                        <button class="btn-view-all">View All</button>
+                    </div>
+                    <div class="room-status-grid" id="roomStatus">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="card glass full-width">
+                <div class="card-header">
+                    <h3><i class="fas fa-chart-bar"></i> Weekly Schedule Overview</h3>
+                    <div class="chart-legend">
+                        <span><i class="fas fa-circle" style="color: #667eea;"></i> Lectures</span>
+                        <span><i class="fas fa-circle" style="color: #f093fb;"></i> Labs</span>
+                        <span><i class="fas fa-circle" style="color: #4facfe;"></i> Seminars</span>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="weeklyChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Timetable Section -->
+        <section id="timetable" class="section">
+            <div class="section-header">
+                <h1><i class="fas fa-calendar-alt"></i> Timetable Scheduler</h1>
+                <p class="subtitle">Manage and schedule classes efficiently</p>
+            </div>
+
+            <!-- Timetable-Courses Connection Bar -->
+            <div style="background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%); border: 2px solid #ec4899; border-radius: 15px; padding: 20px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div style="width: 50px; height: 50px; background: #ec4899; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px;">
+                        <i class="fas fa-link"></i>
+                    </div>
+                    <div>
+                        <h3 style="color: #831843; font-size: 16px; margin-bottom: 5px;">Timetable ↔ Courses Connection</h3>
+                        <p style="color: #be185d; font-size: 13px;">Schedule classes directly from course catalog</p>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <a href="courses-view.html" style="background: #ec4899; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px;"><i class="fas fa-book"></i> Browse Courses</a>
+                    <a href="timetable-view.html" style="background: #ffffff; color: #ec4899; border: 2px solid #ec4899; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px;"><i class="fas fa-calendar"></i> Full Timetable</a>
+                </div>
+            </div>
+
+            <div class="controls-bar glass">
+                <div class="filter-group">
+                    <label>Department:</label>
+                    <select id="deptFilter">
+                        <option value="all">All Departments</option>
+                        <option value="cs">Computer Science</option>
+                        <option value="math">Mathematics</option>
+                        <option value="physics">Physics</option>
+                        <option value="chemistry">Chemistry</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Semester:</label>
+                    <select id="semesterFilter">
+                        <option value="all">All Semesters</option>
+                        <option value="1">Semester 1</option>
+                        <option value="2">Semester 2</option>
+                        <option value="3">Semester 3</option>
+                        <option value="4">Semester 4</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Week:</label>
+                    <input type="week" id="weekPicker" value="2024-W01">
+                </div>
+                <button class="btn-primary" onclick="openModal('addScheduleModal')">
+                    <i class="fas fa-plus"></i> Add Schedule
+                </button>
+            </div>
+
+            <div class="timetable-container glass">
+                <div class="timetable-header">
+                    <div class="time-slot">Time</div>
+                    <div class="day-header">Monday</div>
+                    <div class="day-header">Tuesday</div>
+                    <div class="day-header">Wednesday</div>
+                    <div class="day-header">Thursday</div>
+                    <div class="day-header">Friday</div>
+                </div>
+                <div class="timetable-body" id="timetableBody">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Classrooms Section -->
+        <section id="classrooms" class="section">
+            <div class="section-header">
+                <h1><i class="fas fa-door-open"></i> Classroom Management</h1>
+                <p class="subtitle">Manage classrooms and their resources</p>
+            </div>
+
+            <div class="controls-bar glass">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchClassroom" placeholder="Search classrooms...">
+                </div>
+                <div class="filter-group">
+                    <label>Type:</label>
+                    <select id="roomTypeFilter">
+                        <option value="all">All Types</option>
+                        <option value="lecture">Lecture Hall</option>
+                        <option value="lab">Computer Lab</option>
+                        <option value="seminar">Seminar Room</option>
+                        <option value="workshop">Workshop</option>
+                    </select>
+                </div>
+                <button class="btn-primary" onclick="openModal('addClassroomModal')">
+                    <i class="fas fa-plus"></i> Add Classroom
+                </button>
+            </div>
+
+            <div class="classroom-grid" id="classroomGrid">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+
+        <!-- Courses Section -->
+        <section id="courses" class="section">
+            <div class="section-header">
+                <h1><i class="fas fa-book"></i> Course Management</h1>
+                <p class="subtitle">Manage courses and curriculum</p>
+            </div>
+
+            <!-- Courses-Timetable Connection Bar -->
+            <div style="background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%); border: 2px solid #ec4899; border-radius: 15px; padding: 20px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div style="width: 50px; height: 50px; background: #ec4899; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px;">
+                        <i class="fas fa-link"></i>
+                    </div>
+                    <div>
+                        <h3 style="color: #831843; font-size: 16px; margin-bottom: 5px;">Courses ↔ Timetable Connection</h3>
+                        <p style="color: #be185d; font-size: 13px;">View course schedules and assign time slots</p>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <a href="timetable-view.html" style="background: #ec4899; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px;"><i class="fas fa-calendar-alt"></i> View Timetable</a>
+                    <a href="optimizer-dashboard.html" style="background: #ffffff; color: #ec4899; border: 2px solid #ec4899; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px;"><i class="fas fa-magic"></i> Auto-Schedule</a>
+                </div>
+            </div>
+
+            <div class="controls-bar glass">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchCourse" placeholder="Search courses...">
+                </div>
+                <div class="filter-group">
+                    <label>Department:</label>
+                    <select id="courseDeptFilter">
+                        <option value="all">All Departments</option>
+                        <option value="cs">Computer Science</option>
+                        <option value="math">Mathematics</option>
+                        <option value="physics">Physics</option>
+                    </select>
+                </div>
+                <button class="btn-primary" onclick="openModal('addCourseModal')">
+                    <i class="fas fa-plus"></i> Add Course
+                </button>
+            </div>
+
+            <div class="course-list" id="courseList">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+
+        <!-- Teachers Section -->
+        <section id="teachers" class="section">
+            <div class="section-header">
+                <h1><i class="fas fa-chalkboard-teacher"></i> Teacher Management</h1>
+                <p class="subtitle">Manage faculty and their schedules</p>
+            </div>
+
+            <div class="controls-bar glass">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchTeacher" placeholder="Search teachers...">
+                </div>
+                <div class="filter-group">
+                    <label>Department:</label>
+                    <select id="teacherDeptFilter">
+                        <option value="all">All Departments</option>
+                        <option value="cs">Computer Science</option>
+                        <option value="math">Mathematics</option>
+                        <option value="physics">Physics</option>
+                    </select>
+                </div>
+                <button class="btn-primary" onclick="openModal('addTeacherModal')">
+                    <i class="fas fa-plus"></i> Add Teacher
+                </button>
+            </div>
+
+            <div class="teacher-grid" id="teacherGrid">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Modals -->
+    <div class="modal-overlay" id="modalOverlay"></div>
+
+    <!-- Add Schedule Modal -->
+    <div class="modal" id="addScheduleModal">
+        <div class="modal-header">
+            <h3><i class="fas fa-calendar-plus"></i> Add New Schedule</h3>
+            <button class="btn-close" onclick="closeModal('addScheduleModal')">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form id="scheduleForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Course</label>
+                        <select id="scheduleCourse" required>
+                            <option value="">Select Course</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Teacher</label>
+                        <select id="scheduleTeacher" required>
+                            <option value="">Select Teacher</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Classroom</label>
+                        <select id="scheduleClassroom" required>
+                            <option value="">Select Classroom</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Day</label>
+                        <select id="scheduleDay" required>
+                            <option value="">Select Day</option>
+                            <option value="monday">Monday</option>
+                            <option value="tuesday">Tuesday</option>
+                            <option value="wednesday">Wednesday</option>
+                            <option value="thursday">Thursday</option>
+                            <option value="friday">Friday</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Start Time</label>
+                        <input type="time" id="scheduleStartTime" required>
+                    </div>
+                    <div class="form-group">
+                        <label>End Time</label>
+                        <input type="time" id="scheduleEndTime" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Class Type</label>
+                    <div class="radio-group">
+                        <label class="radio-label">
+                            <input type="radio" name="classType" value="lecture" checked>
+                            <span>Lecture</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="classType" value="lab">
+                            <span>Lab</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="classType" value="seminar">
+                            <span>Seminar</span>
+                        </label>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-secondary" onclick="closeModal('addScheduleModal')">Cancel</button>
+            <button class="btn-primary" onclick="saveSchedule()">Save Schedule</button>
+        </div>
+    </div>
+
+    <!-- Add Classroom Modal -->
+    <div class="modal" id="addClassroomModal">
+        <div class="modal-header">
+            <h3><i class="fas fa-plus-circle"></i> Add New Classroom</h3>
+            <button class="btn-close" onclick="closeModal('addClassroomModal')">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form id="classroomForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Room Number</label>
+                        <input type="text" id="roomNumber" placeholder="e.g., A-101" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Room Type</label>
+                        <select id="roomType" required>
+                            <option value="lecture">Lecture Hall</option>
+                            <option value="lab">Computer Lab</option>
+                            <option value="seminar">Seminar Room</option>
+                            <option value="workshop">Workshop</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Capacity</label>
+                        <input type="number" id="roomCapacity" placeholder="e.g., 60" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Building</label>
+                        <input type="text" id="roomBuilding" placeholder="e.g., Main Building" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Facilities</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" value="projector">
+                            <span><i class="fas fa-video"></i> Projector</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" value="ac">
+                            <span><i class="fas fa-snowflake"></i> AC</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" value="whiteboard">
+                            <span><i class="fas fa-chalkboard"></i> Whiteboard</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" value="computers">
+                            <span><i class="fas fa-desktop"></i> Computers</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" value="wifi">
+                            <span><i class="fas fa-wifi"></i> WiFi</span>
+                        </label>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-secondary" onclick="closeModal('addClassroomModal')">Cancel</button>
+            <button class="btn-primary" onclick="saveClassroom()">Save Classroom</button>
+        </div>
+    </div>
+
+    <!-- Add Course Modal -->
+    <div class="modal" id="addCourseModal">
+        <div class="modal-header">
+            <h3><i class="fas fa-book-medical"></i> Add New Course</h3>
+            <button class="btn-close" onclick="closeModal('addCourseModal')">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form id="courseForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Course Code</label>
+                        <input type="text" id="courseCode" placeholder="e.g., CS101" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Course Name</label>
+                        <input type="text" id="courseName" placeholder="e.g., Introduction to Programming" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Department</label>
+                        <select id="courseDept" required>
+                            <option value="cs">Computer Science</option>
+                            <option value="math">Mathematics</option>
+                            <option value="physics">Physics</option>
+                            <option value="chemistry">Chemistry</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Credits</label>
+                        <input type="number" id="courseCredits" placeholder="e.g., 3" min="1" max="6" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Semester</label>
+                        <select id="courseSemester" required>
+                            <option value="1">Semester 1</option>
+                            <option value="2">Semester 2</option>
+                            <option value="3">Semester 3</option>
+                            <option value="4">Semester 4</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Duration (hours/week)</label>
+                        <input type="number" id="courseDuration" placeholder="e.g., 3" min="1" max="10" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="courseDescription" rows="3" placeholder="Brief course description..."></textarea>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-secondary" onclick="closeModal('addCourseModal')">Cancel</button>
+            <button class="btn-primary" onclick="saveCourse()">Save Course</button>
+        </div>
+    </div>
+
+    <!-- Add Teacher Modal -->
+    <div class="modal" id="addTeacherModal">
+        <div class="modal-header">
+            <h3><i class="fas fa-user-plus"></i> Add New Teacher</h3>
+            <button class="btn-close" onclick="closeModal('addTeacherModal')">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form id="teacherForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>First Name</label>
+                        <input type="text" id="teacherFirstName" placeholder="First Name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name</label>
+                        <input type="text" id="teacherLastName" placeholder="Last Name" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="teacherEmail" placeholder="email@university.edu" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="tel" id="teacherPhone" placeholder="+1 (555) 000-0000">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Department</label>
+                        <select id="teacherDept" required>
+                            <option value="cs">Computer Science</option>
+                            <option value="math">Mathematics</option>
+                            <option value="physics">Physics</option>
+                            <option value="chemistry">Chemistry</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Designation</label>
+                        <select id="teacherDesignation" required>
+                            <option value="professor">Professor</option>
+                            <option value="associate">Associate Professor</option>
+                            <option value="assistant">Assistant Professor</option>
+                            <option value="lecturer">Lecturer</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Specializations</label>
+                    <input type="text" id="teacherSpecializations" placeholder="e.g., AI, Machine Learning, Data Science">
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-secondary" onclick="closeModal('addTeacherModal')">Cancel</button>
+            <button class="btn-primary" onclick="saveTeacher()">Save Teacher</button>
+        </div>
+    </div>
+
+    <!-- Delete Teacher Account Modal -->
+    <div class="modal" id="deleteTeacherModal">
+        <div class="modal-header">
+            <h3><i class="fas fa-user-times" style="color: #ef4444;"></i> Delete Teacher Account</h3>
+            <button class="btn-close" onclick="closeModal('deleteTeacherModal')">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="delete-warning" style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+                <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px;">
+                    <div style="width: 50px; height: 50px; background: rgba(239, 68, 68, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-exclamation-triangle" style="color: #ef4444; font-size: 24px;"></i>
+                    </div>
+                    <div>
+                        <h4 style="color: #ef4444; margin-bottom: 4px;">Warning: Permanent Action</h4>
+                        <p style="color: rgba(255, 255, 255, 0.7); font-size: 14px;">This action cannot be undone</p>
+                    </div>
+                </div>
+                <p style="color: rgba(255, 255, 255, 0.8); line-height: 1.6;">
+                    You are about to permanently delete the teacher account for <strong id="deleteTeacherName" style="color: white;"></strong>. 
+                    This will remove all associated data including:
+                </p>
+                <ul style="color: rgba(255, 255, 255, 0.7); margin: 12px 0 0 20px; line-height: 1.8;">
+                    <li>Teacher profile and personal information</li>
+                    <li>All scheduled classes assigned to this teacher</li>
+                    <li>Course assignments and department associations</li>
+                </ul>
+            </div>
+            
+            <div class="form-group">
+                <label style="color: rgba(255, 255, 255, 0.8);">To confirm deletion, type <strong style="color: #ef4444;">DELETE</strong> below:</label>
+                <input type="text" id="deleteConfirmText" placeholder="Type DELETE to confirm" style="border-color: rgba(239, 68, 68, 0.3);">
+            </div>
+            
+            <input type="hidden" id="deleteTeacherId">
+        </div>
+        <div class="modal-footer">
+            <button class="btn-secondary" onclick="closeModal('deleteTeacherModal')">Cancel</button>
+            <button class="btn-delete" onclick="confirmDeleteTeacher()" style="background: #ef4444; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                <i class="fas fa-trash"></i> Permanently Delete Account
+            </button>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Root element for SPA router -->
+    <div id="root"></div>
+
+    <script src="public/app.js"></script>
+    <script>
+        // Update dashboard stats from API
+        async function updateDashboardStats() {
+            try {
+                const response = await fetch('/api/dashboard/stats');
+                const result = await response.json();
+                
+                if (result.success) {
+                    const stats = result.data;
+                    document.getElementById('totalClassrooms').textContent = stats.totalClassrooms;
+                    document.getElementById('totalCourses').textContent = stats.totalCourses;
+                    document.getElementById('totalTeachers').textContent = stats.totalTeachers;
+                    document.getElementById('totalStudents').textContent = stats.totalStudents.toLocaleString();
+                }
+            } catch (error) {
+                console.error('Failed to load dashboard stats:', error);
+            }
+        }
+        
+        // Load stats when page loads
+        updateDashboardStats();
+    </script>
+</body>
+</html>

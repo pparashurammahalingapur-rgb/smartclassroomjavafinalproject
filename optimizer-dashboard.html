@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timetable Optimizer - Smart Classroom Scheduler</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: #fce7f3;
+        }
+
+        .optimizer-container {
+            padding: 100px 30px 30px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .optimizer-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .optimizer-header h1 {
+            font-size: 36px;
+            color: #831843;
+            margin-bottom: 10px;
+        }
+
+        .optimizer-header p {
+            color: #be185d;
+            font-size: 16px;
+        }
+
+        .optimizer-grid {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 30px;
+        }
+
+        .sidebar-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .panel-card {
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1px solid #f9a8d4;
+            padding: 24px;
+        }
+
+        .panel-card h3 {
+            font-size: 16px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #831843;
+        }
+
+        .panel-card h3 i {
+            color: #ec4899;
+        }
+
+        .input-group {
+            margin-bottom: 16px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 13px;
+            color: #831843;
+            margin-bottom: 8px;
+        }
+
+        .input-group input,
+        .input-group select {
+            width: 100%;
+            padding: 12px;
+            background: #fdf2f8;
+            border: 1px solid #f9a8d4;
+            border-radius: 8px;
+            color: #831843;
+            font-size: 14px;
+        }
+
+        .btn-generate {
+            width: 100%;
+            padding: 16px;
+            background: #ec4899;
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-generate:hover {
+            background: #be185d;
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .timetable-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .option-card {
+            background: #ffffff;
+            border-radius: 16px;
+            border: 2px solid #f9a8d4;
+            padding: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .option-card:hover {
+            border-color: #ec4899;
+            transform: translateY(-4px);
+        }
+
+        .option-card.selected {
+            border-color: #ec4899;
+            background: #fdf2f8;
+        }
+
+        .option-card .score-badge {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: #ec4899;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .option-card h4 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: #831843;
+        }
+
+        .option-card p {
+            color: #be185d;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        .metrics-row {
+            display: flex;
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .metric {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+        }
+
+        .metric-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #ec4899;
+        }
+
+        .metric-label {
+            font-size: 11px;
+            color: #be185d;
+            margin-top: 4px;
+        }
+
+        .conflicts-panel {
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1px solid #f9a8d4;
+            padding: 24px;
+        }
+
+        .conflicts-panel h3 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            color: #831843;
+        }
+
+        .conflict-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 16px;
+            background: #fee2e2;
+            border: 1px solid #fecaca;
+            border-radius: 10px;
+            margin-bottom: 12px;
+        }
+
+        .conflict-item.resolved {
+            background: #d1fae5;
+            border-color: #a7f3d0;
+        }
+
+        .conflict-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fecaca;
+            color: #dc2626;
+        }
+
+        .conflict-item.resolved .conflict-icon {
+            background: #a7f3d0;
+            color: #059669;
+        }
+
+        .conflict-content h4 {
+            font-size: 14px;
+            margin-bottom: 4px;
+            color: #831843;
+        }
+
+        .conflict-content p {
+            font-size: 13px;
+            color: #be185d;
+        }
+
+        .workflow-status {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 12px;
+            margin-top: 20px;
+            border: 1px solid #f9a8d4;
+        }
+
+        .workflow-step {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+        }
+
+        .workflow-step i {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+        }
+
+        .workflow-step.completed i {
+            background: #10b981;
+            color: white;
+        }
+
+        .workflow-step.pending i {
+            background: #f9a8d4;
+            color: #831843;
+        }
+
+        .workflow-step.active i {
+            background: #ec4899;
+            color: white;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.4); }
+            50% { box-shadow: 0 0 0 10px rgba(102, 126, 234, 0); }
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #ec4899;
+            border: none;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #be185d;
+        }
+
+        .btn-secondary {
+            background: #ffffff;
+            border: 1px solid #f9a8d4;
+            color: #831843;
+        }
+
+        .btn-secondary:hover {
+            background: #fdf2f8;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 1024px) {
+            .optimizer-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar" style="background: #ffffff; border-bottom: 1px solid #f9a8d4;">
+        <div class="nav-brand">
+            <i class="fas fa-graduation-cap"></i>
+            <span>EduSmart</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li><a href="optimizer-dashboard.html" class="active"><i class="fas fa-magic"></i> Optimizer</a></li>
+            <li><a href="index.html#timetable"><i class="fas fa-calendar-alt"></i> Timetable</a></li>
+            <li><a href="index.html#classrooms"><i class="fas fa-door-open"></i> Classrooms</a></li>
+            <li><a href="index.html#teachers"><i class="fas fa-chalkboard-teacher"></i> Teachers</a></li>
+        </ul>
+        <div class="nav-actions">
+            <button class="btn-notification">
+                <i class="fas fa-bell"></i>
+                <span class="badge">3</span>
+            </button>
+            <div class="user-profile" id="userProfile">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=admin" alt="User">
+                <span id="userName">Admin</span>
+                <i class="fas fa-chevron-down"></i>
+                <div class="dropdown-menu" id="userDropdown">
+                    <a href="#"><i class="fas fa-user"></i> Profile</a>
+                    <a href="#"><i class="fas fa-cog"></i> Settings</a>
+                    <div class="divider"></div>
+                    <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="optimizer-container">
+        <div class="optimizer-header">
+            <h1><i class="fas fa-magic"></i> Timetable Optimizer</h1>
+            <p>Generate optimized timetables with AI-powered scheduling</p>
+        </div>
+
+        <div class="optimizer-grid">
+            <div class="sidebar-panel">
+                <div class="panel-card">
+                    <h3><i class="fas fa-sliders-h"></i> Optimization Parameters</h3>
+                    
+                    <div class="input-group">
+                        <label>Department</label>
+                        <select id="department">
+                            <option value="all">All Departments</option>
+                            <option value="cs">Computer Science</option>
+                            <option value="math">Mathematics</option>
+                            <option value="physics">Physics</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Semester</label>
+                        <select id="semester">
+                            <option value="1">Semester 1</option>
+                            <option value="2">Semester 2</option>
+                            <option value="3">Semester 3</option>
+                            <option value="4">Semester 4</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Max Classes Per Day</label>
+                        <input type="number" id="maxClasses" value="6" min="4" max="8">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Priority</label>
+                        <select id="priority">
+                            <option value="balanced">Balanced</option>
+                            <option value="teacher">Teacher Preference</option>
+                            <option value="room">Room Utilization</option>
+                        </select>
+                    </div>
+
+                    <button class="btn-generate" id="generateBtn">
+                        <i class="fas fa-magic"></i> Generate Timetables
+                    </button>
+                </div>
+
+                <div class="panel-card">
+                    <h3><i class="fas fa-chart-pie"></i> Quick Stats</h3>
+                    <div class="metrics-row">
+                        <div class="metric">
+                            <div class="metric-value">6</div>
+                            <div class="metric-label">Classrooms</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">4</div>
+                            <div class="metric-label">Teachers</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">6</div>
+                            <div class="metric-label">Courses</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="main-content">
+                <div class="timetable-options" id="timetableOptions">
+                    <!-- Generated options will appear here -->
+                    <div class="option-card selected">
+                        <div class="score-badge">92%</div>
+                        <h4><i class="fas fa-balance-scale"></i> Balanced Schedule</h4>
+                        <p>Optimal balance between teacher workload, room usage, and student convenience</p>
+                        <div class="metrics-row">
+                            <div class="metric">
+                                <div class="metric-value">18</div>
+                                <div class="metric-label">Avg Hours</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-value">85%</div>
+                                <div class="metric-label">Room Use</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-value">2</div>
+                                <div class="metric-label">Conflicts</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="option-card">
+                        <div class="score-badge">88%</div>
+                        <h4><i class="fas fa-user-tie"></i> Teacher Preferred</h4>
+                        <p>Prioritizes teacher preferences and minimizes consecutive classes</p>
+                        <div class="metrics-row">
+                            <div class="metric">
+                                <div class="metric-value">16</div>
+                                <div class="metric-label">Avg Hours</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-value">72%</div>
+                                <div class="metric-label">Room Use</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-value">0</div>
+                                <div class="metric-label">Conflicts</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="option-card">
+                        <div class="score-badge">85%</div>
+                        <h4><i class="fas fa-door-open"></i> Room Optimized</h4>
+                        <p>Maximizes classroom utilization and minimizes room changes</p>
+                        <div class="metrics-row">
+                            <div class="metric">
+                                <div class="metric-value">20</div>
+                                <div class="metric-label">Avg Hours</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-value">95%</div>
+                                <div class="metric-label">Room Use</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-value">4</div>
+                                <div class="metric-label">Conflicts</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="conflicts-panel">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Conflicts & Suggestions</h3>
+                    
+                    <div class="conflict-item">
+                        <div class="conflict-icon"><i class="fas fa-user-clock"></i></div>
+                        <div class="conflict-content">
+                            <h4>Teacher Overlap: Dr. Smith</h4>
+                            <p>Double booked on Monday 10:00 AM - CS201 and MATH101</p>
+                        </div>
+                        <button class="btn btn-secondary" style="margin-left: auto;">
+                            <i class="fas fa-wrench"></i> Fix
+                        </button>
+                    </div>
+
+                    <div class="conflict-item resolved">
+                        <div class="conflict-icon"><i class="fas fa-check"></i></div>
+                        <div class="conflict-content">
+                            <h4>Room Conflict: Lab B-201</h4>
+                            <p>Resolved: Moved CS301 Lab to Tuesday 2:00 PM</p>
+                        </div>
+                    </div>
+
+                    <div class="conflict-item">
+                        <div class="conflict-icon"><i class="fas fa-users"></i></div>
+                        <div class="conflict-content">
+                            <h4>Batch Overlap: Batch A</h4>
+                            <p>Students have 3 consecutive classes without break</p>
+                        </div>
+                        <button class="btn btn-secondary" style="margin-left: auto;">
+                            <i class="fas fa-wrench"></i> Fix
+                        </button>
+                    </div>
+                </div>
+
+                <div class="workflow-status">
+                    <div class="workflow-step completed">
+                        <i class="fas fa-check"></i>
+                        <span>Draft</span>
+                    </div>
+                    <i class="fas fa-arrow-right" style="color: rgba(255,255,255,0.3);"></i>
+                    <div class="workflow-step active">
+                        <i class="fas fa-clock"></i>
+                        <span>HOD Review</span>
+                    </div>
+                    <i class="fas fa-arrow-right" style="color: rgba(255,255,255,0.3);"></i>
+                    <div class="workflow-step pending">
+                        <i class="fas fa-circle"></i>
+                        <span>Dean Review</span>
+                    </div>
+                    <i class="fas fa-arrow-right" style="color: rgba(255,255,255,0.3);"></i>
+                    <div class="workflow-step pending">
+                        <i class="fas fa-circle"></i>
+                        <span>Published</span>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i> Submit for Review
+                    </button>
+                    <button class="btn btn-secondary">
+                        <i class="fas fa-download"></i> Export PDF
+                    </button>
+                    <button class="btn btn-secondary">
+                        <i class="fas fa-share-alt"></i> Share
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Auth check
+        const currentUser = JSON.parse(localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser') || '{}');
+        if (!currentUser.email) {
+            window.location.href = 'login.html';
+        }
+
+        // Update user info
+        document.getElementById('userName').textContent = currentUser.firstName || 'User';
+        document.querySelector('.user-profile img').src = currentUser.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${currentUser.firstName || 'user'}`;
+
+        // Dropdown toggle
+        document.getElementById('userProfile').addEventListener('click', (e) => {
+            e.stopPropagation();
+            document.getElementById('userDropdown').classList.toggle('show');
+        });
+
+        document.addEventListener('click', () => {
+            document.getElementById('userDropdown').classList.remove('show');
+        });
+
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            localStorage.removeItem('currentUser');
+            sessionStorage.removeItem('currentUser');
+            window.location.href = 'login.html';
+        });
+
+        // Generate button
+        document.getElementById('generateBtn').addEventListener('click', function() {
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
+            setTimeout(() => {
+                this.innerHTML = '<i class="fas fa-magic"></i> Generate Timetables';
+                alert('3 optimized timetables generated! Select the best option above.');
+            }, 2000);
+        });
+
+        // Select timetable option
+        document.querySelectorAll('.option-card').forEach(card => {
+            card.addEventListener('click', () => {
+                document.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+                card.classList.add('selected');
+            });
+        });
+    </script>
+</body>
+</html>
